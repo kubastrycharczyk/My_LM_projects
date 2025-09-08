@@ -3,7 +3,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn import preprocessing
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
 class Forest_Predictor:
@@ -33,15 +34,25 @@ class Forest_Predictor:
         self.n_estimators = n_estimators
 
     def train_forest(self):
-        self.model = RandomForestClassifier(random_state=self.random_state, n_jobs=self.n_jobs, n_estimators=self.n_estimators).fit(self.X_train, self.y_train)
-        score = cross_val_score(self.model, self.X_train, self.y_train, cv=5, scoring="accuracy")
+        self.model = RandomForestRegressor(random_state=self.random_state, n_jobs=self.n_jobs, n_estimators=self.n_estimators).fit(self.X_train, self.y_train)
+        score = cross_val_score(self.model, self.X_train, self.y_train, cv=5, scoring="r2")
         return score
     
     def test_forest(self):
         prediction=self.model.predict(self.X_test)
-        return prediction
+        mae = mean_absolute_error(self.y_test, prediction)
+        mse = mean_squared_error(self.y_test, prediction)
+        r2 = r2_score(self.y_test, prediction) 
+        rmse = np.sqrt(mse)
+        
+        stats = {
+            'MAE': mae,
+            'MSE': mse,
+            'RMSE': rmse,
+            'R2': r2
+        }
+        return stats
     
     def predict_forest(self, exa):
         exa = self.standarize(exa)
         return self.model.predict(exa) 
-
