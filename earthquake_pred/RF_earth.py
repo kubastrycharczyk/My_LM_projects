@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import make_scorer,mean_absolute_error, mean_squared_error, r2_score
 
 
 class Forest_Predictor:
@@ -34,9 +34,29 @@ class Forest_Predictor:
         self.n_estimators = n_estimators
 
     def train_forest(self):
+        scoring = {
+             "MAE": make_scorer(mean_absolute_error),
+             "MSE": make_scorer(mean_squared_error),
+             "RMSE": make_scorer(lambda y_true, y_pred: np.sqrt(mean_squared_error(y_true,y_pred))),
+             "R2": make_scorer(r2_score)
+        }
+
+        cv = cross_validate(
+             RandomForestRegressor(random_state=self.random_state, n_jobs=self.n_jobs, n_estimators=self.n_estimators),
+             self.X_train, self.y_train,
+             cv=5,
+             scoring=scoring
+        )
+
+        stats={
+             "MAE": np.mean(cv["test_MAE"]),
+             "MSE": np.mean(cv["test_MSE"]),
+             "RMSE": np.mean(cv["test_RMSE"]),
+             "R2": np.mean(cv["test_R2"]),
+        }
+
         self.model = RandomForestRegressor(random_state=self.random_state, n_jobs=self.n_jobs, n_estimators=self.n_estimators).fit(self.X_train, self.y_train)
-        score = cross_val_score(self.model, self.X_train, self.y_train, cv=5, scoring="r2")
-        return score
+        return stats
     
     def test_forest(self):
         prediction=self.model.predict(self.X_test)
