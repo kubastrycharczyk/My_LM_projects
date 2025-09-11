@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_validate
+from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import make_scorer,mean_absolute_error, mean_squared_error, r2_score
@@ -26,12 +25,57 @@ class Forest_Predictor:
         self.n_jobs=-1 #how many processors in usage
         self.random_state = 0 
         self.n_estimators = 100
+    
 
 
     def setting_parameters(self,n_jobs, random_state, n_estimators):
         self.n_jobs=n_jobs
         self.random_state = random_state
         self.n_estimators = n_estimators
+
+    def grid_search(self):
+        param_grid={
+            'n_estimators': [100, 200, 300],
+            'max_depth': [None, 10, 20, 30],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4],
+            'max_features': ['sqrt', 'log2']
+        }
+        model = RandomForestRegressor(random_state=42)
+        scorer = {
+            "MAE": make_scorer(mean_absolute_error,greater_is_better=False),
+            "MSE": make_scorer(mean_squared_error, greater_is_better=False),
+            "R2": make_scorer(r2_score)        
+        }
+        grid = GridSearchCV(
+            estimator=model,
+            param_grid=param_grid,
+            scoring=scorer,
+            refit="R2",
+            cv=5,
+            n_jobs=-1,
+            verbose=2
+        )
+        grid.fit(self.X_train,self.y_train)
+
+        self.model = grid.best_estimator_
+
+        cv_results = grid.cv_results_
+        best_index = grid.best_index_
+        outcomes = {
+            "najlepsze_parametry": grid.best_params_,
+            "sredni_r2": cv_results['mean_test_R2'][best_index],
+            "sredni_mae": -cv_results['mean_test_MAE'][best_index],  
+            "sredni_mse": -cv_results['mean_test_MSE'][best_index],  
+        }
+
+        print(outcomes)
+
+
+
+
+        
+         
 
     def train_forest(self):
         scoring = {
