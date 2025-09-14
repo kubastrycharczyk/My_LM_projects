@@ -21,19 +21,23 @@ class Forest_Predictor:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X,y, train_size = 0.8)
         self.X_train = self.create_standarizer(self.X_train)
         self.X_test = self.standarize(self.X_test)
-
+        self.trans=None
         self.n_jobs=-1 #how many processors in usage
         self.random_state = 0 
         self.n_estimators = 100
-    
 
+    def make_polynomial(self, degree=2):
+        trans = preprocessing.PolynomialFeatures(degree=2, include_bias=False)    
+        self.X_train=trans.fit_transform(self.X_train)
+        self.X_test=trans.transform(self.X_test)
+        self.trans =trans
 
     def setting_parameters(self,n_jobs, random_state, n_estimators):
         self.n_jobs=n_jobs
         self.random_state = random_state
         self.n_estimators = n_estimators
 
-    def grid_search(self):
+    def grid_search(self,score_type = "R2"):
         param_grid={
             'n_estimators': [100, 200, 300],
             'max_depth': [None, 10, 20, 30],
@@ -47,11 +51,14 @@ class Forest_Predictor:
             "MSE": make_scorer(mean_squared_error, greater_is_better=False),
             "R2": make_scorer(r2_score)        
         }
+        if score_type not in scorer:
+            raise ValueError(f"Niepoprawny typ metryki: {score_type}. Dostępne: {list(scorer.keys())}")
+
         grid = GridSearchCV(
             estimator=model,
             param_grid=param_grid,
             scoring=scorer,
-            refit="R2",
+            refit=score_type,
             cv=5,
             n_jobs=-1,
             verbose=2
@@ -70,6 +77,7 @@ class Forest_Predictor:
         }
 
         print(outcomes)
+        print(self.X_train.size)
 
 
 
@@ -118,5 +126,10 @@ class Forest_Predictor:
         return stats
     
     def predict_forest(self, exa):
-        exa = self.standarize(exa)
-        return self.model.predict(exa) 
+        if self.trans==None:
+            exa = self.standarize(exa)
+            return self.model.predict(exa) 
+        else:
+            exa=self.trans.transform(exa)
+            exa = self.standarize(exa)
+            return self.model.predict(exa) 
