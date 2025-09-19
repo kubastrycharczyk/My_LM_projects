@@ -1,21 +1,72 @@
 # Earthquake Prediction with Random Forest
 
-{'najlepsze_parametry': {'max_depth': 10, 'max_features': 'sqrt', 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 100}, 'sredni_r2': np.float64(0.5110667007158745), 'sredni_mae': np.float64(0.40675711343383225), 'sredni_mse': np.float64(0.2832233679541909)}
-19575
-{'MAE': np.float64(0.42719478179299486),
- 'MSE': np.float64(0.3104968964071049),
- 'RMSE': np.float64(0.5570535957879954),
- 'R2': np.float64(0.46410815080059525)}
+
+---
+**RUN 5.** Scores from cross-validation with polynomial features of degree 3 and proper order of standarization.  
+
+
+| Scoring type | Score |
+|------------|------------|
+| MAE    | 0.42237241749183135    | 
+| MSE     | 0.29907733354802096    | 
+| RMSE     | 0.5466368229391567    | 
+| R2     | 0.4918076973810413     | 
 
 
 
-{'najlepsze_parametry': {'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 4, 'min_samples_split': 2, 'n_estimators': 300}, 'sredni_r2': np.float64(0.5088833692307035), 'sredni_mae': np.float64(0.4086009610771182), 'sredni_mse': np.float64(0.28878114951401057)}
 
 
 ---
-**RUN 1.** Scores from cross-validation achieved after first training run.  
-|Date: |10.09.2025|
+**RUN 4.** Scores from cross-validation with polynomial features of degree 2 and proper order of standarization.  
+
+
+| Scoring type | Score |
 |------------|------------|
+| MAE    | 0.4225061196198438    | 
+| MSE     | 0.29910073333451104    | 
+| RMSE     | 0.546569101287967    | 
+| R2     | 0.4919120261877922     | 
+
+
+
+
+
+---
+**RUN 3.** Scores from cross-validation with polynomial features of degree 2 but with wrong order of standarization.  
+
+
+| Scoring type | Score |
+|------------|------------|
+| MAE    | 0.42719478179299486    | 
+| MSE     | 0.3104968964071049    | 
+| RMSE     | 0.5570535957879954    | 
+| R2     | 0.46410815080059525     | 
+
+
+
+
+
+
+---
+
+
+**RUN 2.** Scores from cross-validation with grid search implementation.  
+
+
+| Scoring type | Score |
+|------------|------------|
+| MAE    | 0.4263353552437346    | 
+| MSE     | 0.3087935913713184    | 
+| RMSE     | 0.5552154450490114    | 
+| R2     | 0.4721765387710703     | 
+
+
+
+**Next step:** Polynomial features.   
+
+---
+**RUN 1.** Scores from cross-validation achieved after first training run.  
+
 
 | Scoring type | Score |
 |------------|------------|
@@ -30,3 +81,6 @@
 **Next step:** Hyperparameter tuning.   
 
 ---
+
+**Mistakes made:**
+- Standarizing data before creating polynomial features

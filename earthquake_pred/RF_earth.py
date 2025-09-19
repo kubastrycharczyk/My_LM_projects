@@ -7,27 +7,32 @@ from sklearn.metrics import make_scorer,mean_absolute_error, mean_squared_error,
 
 
 class Forest_Predictor:
-    def create_standarizer(self, z):
-        self.minmax_scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
-        return self.minmax_scaler.fit_transform(z)
-    
-    def standarize(self,z):
-            return self.minmax_scaler.transform(z)
+
 
   
     def __init__(self, dataframe, target_name):
         y = dataframe[target_name].to_numpy()
         X = dataframe.drop(target_name, axis=1).to_numpy()
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X,y, train_size = 0.8)
-        self.X_train = self.create_standarizer(self.X_train)
-        self.X_test = self.standarize(self.X_test)
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X,y, train_size = 0.8, random_state=42)
+        
         self.trans=None
         self.n_jobs=-1 #how many processors in usage
         self.random_state = 0 
         self.n_estimators = 100
+    
+    def create_standardizer(self, z):
+        self.minmax_scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
+        return self.minmax_scaler.fit_transform(z)
+    
+    def standardizer(self,z):
+            return self.minmax_scaler.transform(z)
+    
+    def standardize(self):
+        self.X_train = self.create_standardizer(self.X_train)
+        self.X_test = self.standardizer(self.X_test)
 
     def make_polynomial(self, degree=2):
-        trans = preprocessing.PolynomialFeatures(degree=2, include_bias=False)    
+        trans = preprocessing.PolynomialFeatures(degree=degree, include_bias=False)    
         self.X_train=trans.fit_transform(self.X_train)
         self.X_test=trans.transform(self.X_test)
         self.trans =trans
@@ -127,9 +132,9 @@ class Forest_Predictor:
     
     def predict_forest(self, exa):
         if self.trans==None:
-            exa = self.standarize(exa)
+            exa = self.standardizer(exa)
             return self.model.predict(exa) 
         else:
             exa=self.trans.transform(exa)
-            exa = self.standarize(exa)
+            exa = self.standardizer(exa)
             return self.model.predict(exa) 
