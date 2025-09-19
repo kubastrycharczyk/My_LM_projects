@@ -49,16 +49,15 @@
 
 ---
 
-
 **RUN 2.** Scores from cross-validation with grid search implementation.  
 
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.4263353552437346    | 
-| MSE     | 0.3087935913713184    | 
-| RMSE     | 0.5552154450490114    | 
-| R2     | 0.4721765387710703     | 
+| MAE    | 0.42845563898425976    | 
+| MSE     | 0.30704408286457296    | 
+| RMSE     | 0.553910595079019    | 
+| R2     | 0.4782307434524992     | 
 
 
 
@@ -84,3 +83,10 @@
 
 **Mistakes made:**
 - Standarizing data before creating polynomial features
+
+
+Earthquake data:
+https://data-flair.training/blogs/earthquake-prediction-using-machine-learning/
+
+Tectonic Plate Boundaries:
+https://www.kaggle.com/datasets/cwthompson/tectonic-plate-boundaries?utm_source=chatgpt.com
