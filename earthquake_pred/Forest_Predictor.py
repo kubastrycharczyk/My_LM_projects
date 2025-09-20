@@ -7,9 +7,6 @@ from sklearn.metrics import make_scorer,mean_absolute_error, mean_squared_error,
 
 
 class Forest_Predictor:
-
-
-  
     def __init__(self, dataframe, target_name):
         y = dataframe[target_name].to_numpy()
         X = dataframe.drop(target_name, axis=1).to_numpy()
