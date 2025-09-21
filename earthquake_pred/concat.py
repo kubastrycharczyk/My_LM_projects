@@ -1,5 +1,6 @@
 import pandas as pd
 import math
+from sklearn.preprocessing import LabelEncoder
 
 
 
@@ -13,18 +14,28 @@ class concat:
         return math.sqrt((x-a)**2 + (y-b)**2)
         
     def _dist_calc(self, x, y):
-        min = self._eucl_dist(x, y, 100000, 1000000)
-        for i, j in zip(self.df_add["lat"], self.df_add["lon"]):
+        min_dist = float('inf')
+        plate = ""
+        for i, j, z in zip(self.df_add["lat"], self.df_add["lon"], self.df_add["plate"]):
             tmp = self._eucl_dist(x, y, i, j)
-            if min > tmp:
-                min = tmp
-        return min
+            if min_dist > tmp:
+                min_dist = tmp
+                plate = z
+        return min_dist, plate
     
     def _calc_dist(self):
         t = []
+        p = []
         for i, j in zip(self.df["Latitude"], self.df["Longitude"]):
-            t.append(self._dist_calc(i, j))
+            dist, plate = self._dist_calc(i, j)
+            t.append(dist)
+            p.append(plate)
+        
+        labenc = LabelEncoder()
+        p = labenc.fit_transform(p)
+
         self.df["Plate_Dist"] = t
+        self.df["Plate"] = p
 
     def get_done(self):
         self._calc_dist()
@@ -32,5 +43,3 @@ class concat:
         return self.df
 
 
-new = concat("dataset.csv", "all.csv")
-new.get_done()

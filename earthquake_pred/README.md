@@ -1,6 +1,32 @@
 # Earthquake Prediction with Random Forest
 
 
+{'MAE': 0.4268907958235889,
+ 'MSE': 0.30399976509695825,
+ 'RMSE': 0.5509756497213788,
+ 'R2': 0.4835879799552104}
+
+
+
+---
+**RUN 6.** Scores from cross-validation with polynomial features of degree 2 and adding new feature of platue distance.  
+
+
+| Scoring type | Score |
+|------------|------------|
+| MAE    | 0.42309981103315597    | 
+| MSE     | 0.2983456267485161    | 
+| RMSE     | 0.5458475729250454    | 
+| R2     | 0.4931909172324486     | 
+
+
+
+
+
+
+
+
+
 ---
 **RUN 5.** Scores from cross-validation with polynomial features of degree 3 and proper order of standarization.  
 

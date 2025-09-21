@@ -10,6 +10,7 @@ class Forest_Predictor:
     def __init__(self, dataframe, target_name):
         y = dataframe[target_name].to_numpy()
         X = dataframe.drop(target_name, axis=1).to_numpy()
+        print(X)
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X,y, train_size = 0.8, random_state=42)
         
         self.trans=None
