@@ -1,77 +1,49 @@
 # Earthquake Prediction with Random Forest
 
 
-{'MAE': 0.4268907958235889,
- 'MSE': 0.30399976509695825,
- 'RMSE': 0.5509756497213788,
- 'R2': 0.4835879799552104}
-
-
-
----
-**RUN 6.** Scores from cross-validation with polynomial features of degree 2 and adding new feature of platue distance.  
+**RUN 5.** Scores from cross-validation with polynomial features of degree 1 and adding new feature of platue distance.  
 
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.42309981103315597    | 
-| MSE     | 0.2983456267485161    | 
-| RMSE     | 0.5458475729250454    | 
-| R2     | 0.4931909172324486     | 
+| MAE    | 0.40515047416526284    | 
+| MSE     | 0.2782793132302996    | 
+| R2     | 0.5272723683910844     | 
 
+**Analysis:** Feature engineering had slightly improvment from the best score, improvment around 0.6% point in R2. 
 
-
-
-
-
-
+**Next step:** Adding lightgbm to the project.
 
 
 ---
-**RUN 5.** Scores from cross-validation with polynomial features of degree 3 and proper order of standarization.  
+**RUN 4.** Scores from cross-validation with polynomial features of degree 3 and proper order of standarization.  
 
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.42237241749183135    | 
-| MSE     | 0.29907733354802096    | 
-| RMSE     | 0.5466368229391567    | 
-| R2     | 0.4918076973810413     | 
+| MAE    | 0.4102255488013915    | 
+| MSE     | 0.2839492976532145    | 
+| R2     | 0.517611637264747     | 
 
+**Analysis:** Polynomial features of degree 3 gives minimal worse results than degree 2. 
 
-
+**Next step:** Performing feature engineering, adding distance from tectonic platue and type of it.
 
 
 ---
-**RUN 4.** Scores from cross-validation with polynomial features of degree 2 and proper order of standarization.  
+**RUN 3.** Scores from cross-validation with polynomial features of degree 2 and proper order of standarization.  
 
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.4225061196198438    | 
-| MSE     | 0.29910073333451104    | 
-| RMSE     | 0.546569101287967    | 
-| R2     | 0.4919120261877922     | 
+| MAE    | 0.40987615224550994    | 
+| MSE     | 0.2836645332469261    | 
+| R2     | 0.518226749996563     | 
 
 
+**Analysis:** Polynomial features of degree 2 gives minimal worse results which is excepcted because forests are able to reflect non-linear schemes. 
 
-
-
----
-**RUN 3.** Scores from cross-validation with polynomial features of degree 2 but with wrong order of standarization.  
-
-
-| Scoring type | Score |
-|------------|------------|
-| MAE    | 0.42719478179299486    | 
-| MSE     | 0.3104968964071049    | 
-| RMSE     | 0.5570535957879954    | 
-| R2     | 0.46410815080059525     | 
-
-
-
-
-
+**Next step:** Just in case, performing degree 3.
 
 ---
 
@@ -80,25 +52,22 @@
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.42845563898425976    | 
-| MSE     | 0.30704408286457296    | 
-| RMSE     | 0.553910595079019    | 
-| R2     | 0.4782307434524992     | 
+| MAE    | 0.4080624310856427    | 
+| MSE     | 0.2822416754867173    | 
+| R2     | 0.5205997973225613     | 
 
+**Analysis:** Grid search implementation had significant impact on r2 score with improvment around 5% points. 
 
-
-**Next step:** Polynomial features.   
-
+**Next step:** Polynomial features, the problem might be in small number of features in set that consists only of 3 predictors.   
 ---
 **RUN 1.** Scores from cross-validation achieved after first training run.  
 
 
 | Scoring type | Score |
 |------------|------------|
-| MAE    | 0.4263353552437346    | 
-| MSE     | 0.3087935913713184    | 
-| RMSE     | 0.5552154450490114    | 
-| R2     | 0.4721765387710703     | 
+| MAE    | 0.42845563898425965    | 
+| MSE     | 0.30704408286457285    | 
+| R2     | 0.47823074345249916     | 
 
 
 **Analysis:** Errors of model are relativly low, that sugests that model well predicts values. Score of R2 seems to be insufficient explaining only 47% of variability.
