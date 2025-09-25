@@ -4,19 +4,34 @@ from sklearn.model_selection import train_test_split, cross_validate, GridSearch
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import make_scorer,mean_absolute_error, mean_squared_error, r2_score
-
+from lightgbm import LGBMRegressor
 
 class Forest_Predictor:
-    def __init__(self, dataframe, target_name):
+    def __init__(self, dataframe, target_name, model_name="RandomForest"):
         y = dataframe[target_name].to_numpy()
         X = dataframe.drop(target_name, axis=1).to_numpy()
-        print(X)
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X,y, train_size = 0.8, random_state=42)
-        
         self.trans=None
-        self.n_jobs=-1 #how many processors in usage
         self.random_state = 0 
-        self.n_estimators = 100
+
+        
+        self.model_name = model_name
+        self.model_params = {}
+        self.model = None
+        self.models = {
+            "RandomForest: ": RandomForestRegressor,
+            "LightGBM: ": LGBMRegressor
+        }
+        self.setters = {
+            "RandomForest: ": self._set_params_forest,
+            "LightGBM: ": self._set_params_lightgbm
+        }
+    
+    def _set_model(self):
+        model_class = self.models.get(self.model_name)
+        if model_class is None:
+            raise ValueError(f"Nieznany model: {self.model_name}")
+        self.model = model_class(**self.model_params)
     
     def create_standardizer(self, z):
         self.minmax_scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
@@ -34,11 +49,40 @@ class Forest_Predictor:
         self.X_train=trans.fit_transform(self.X_train)
         self.X_test=trans.transform(self.X_test)
         self.trans =trans
+    
+    def _set_params_forest(self, **kwargs):
+        defaults = {
+            'n_estimators': 100,
+            'max_depth': None,
+            'min_samples_split': 2,
+            'min_samples_leaf': 1,
+            'max_features': 'auto'
+        }
+        self.model_params.update(defaults)
+        self.model_params.update(kwargs)
 
-    def setting_parameters(self,n_jobs, random_state, n_estimators):
-        self.n_jobs=n_jobs
-        self.random_state = random_state
-        self.n_estimators = n_estimators
+    def _set_params_lightgbm(self, **kwargs):
+        defaults = {
+            'boosting_type': 'gbdt',
+            'objective': 'regression',
+            'metric': 'rmse',
+            'num_leaves': 31,
+            'learning_rate': 0.05,
+            'feature_fraction': 0.9
+        }
+        self.model_params.update(defaults)
+        self.model_params.update(kwargs)
+
+    def set_params(self, **kwargs):
+        setter = self.setters.get(self.model_name)
+        setter(**kwargs)
+    
+    def train_model(self):
+        self._set_model()
+        if self.model_params=={}:
+            self.set_params() # if no params set, use defaults
+        #wyowałaj grid_search
+        # wywołaj train_forest
 
     def grid_search(self,score_type = "R2"):
         param_grid={
